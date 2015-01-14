@@ -1,3 +1,7 @@
+```{r}
+setwd("D:/Users/dia/Downloads/reproducible-research/RepData_PeerAssessment1")
+```
+
 ---
 title: "Reproducible Research: Peer Assessment 1"
 output: 
@@ -5,14 +9,27 @@ output:
     keep_md: true
 ---
 
-
 ## Loading and preprocessing the data
-
-
+```{r}
+actividad<-read.csv("activity.csv")
+acumulado<-aggregate(steps ~ date, actividad, sum)
+```
 
 ## What is mean total number of steps taken per day?
 
+```{r}
+hist(acumulado$steps,main="Histogram of Steps",xlab="Steps per day")
+```
 
+### Mean: 
+```{r}
+mean(acumulado$steps)
+```
+
+### Median:
+```{r}
+median(acumulado$steps)
+```
 
 ## What is the average daily activity pattern?
 
