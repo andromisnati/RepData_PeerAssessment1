@@ -1,5 +1,7 @@
 ```{r}
 setwd("D:/Users/dia/Downloads/reproducible-research/RepData_PeerAssessment1")
+library(knitr)
+opts_chunk$set(fig.width=10, fig.height=6, fig.path='figure/',warning=FALSE, message=FALSE)
 ```
 
 ---
@@ -88,6 +90,18 @@ We notice that the histogram changes a bit because the sum has greater values.  
 ## Are there differences in activity patterns between weekdays and weekends?
 
 ```{r}
+Sys.setlocale("LC_TIME", "English")
+#We need to use English Days
+
+actividad2$isweekend <- ifelse( ( (weekdays(as.Date(actividad2$date))=="Sunday") | (weekdays(as.Date(actividad2$date))=="Saturday") ), "weekend", "weekday")
+#Day-type set
+
+acumulado4<-aggregate( actividad2$steps, list(actividad2$interval,actividad2$isweekend), FUN = mean )
+colnames(acumulado4)<-c("interval","isweekend","steps")
+#aggregate of means by interval/day-type
+
+library(lattice)
+xyplot(steps ~ interval | isweekend, data = acumulado4, 
+       layout = c(1, 2),type="l", ylab="Number of Steps")
 
 ```
-
