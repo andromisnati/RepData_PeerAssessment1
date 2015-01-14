@@ -12,31 +12,82 @@ output:
 ## Loading and preprocessing the data
 ```{r}
 actividad<-read.csv("activity.csv")
-acumulado<-aggregate(steps ~ date, actividad, sum)
+acumulado1<-aggregate(steps ~ date, actividad, sum)
+acumulado2<-aggregate(steps ~ interval, actividad, mean)
 ```
 
 ## What is mean total number of steps taken per day?
 
 ```{r}
-hist(acumulado$steps,main="Histogram of Steps",xlab="Steps per day")
+hist(acumulado1$steps,main="Histogram of Steps",xlab="Steps per day")
 ```
 
 ### Mean: 
 ```{r}
-mean(acumulado$steps)
+mean(acumulado1$steps)
 ```
 
 ### Median:
 ```{r}
-median(acumulado$steps)
+median(acumulado1$steps)
 ```
 
 ## What is the average daily activity pattern?
 
+```{r}
+plot(acumulado2$interval,acumulado2$steps,type="l",ylab="Average of Steps",xlab="5 min Intervals of the Day",main="Time Series")
+maximo<-acumulado2[acumulado2$steps==max(acumulado2$steps,na.rm = FALSE),]
+```
 
+### Maximum average of steps Interval
+`r maximo$interval`
 
 ## Imputing missing values
 
+```{r}
+numna<-nrow(actividad[is.na(actividad$steps),])
+```
 
+### Number of missing values
+`r numna`
+
+```{r}
+actividad2<-actividad
+for (i in 1:nrow(actividad))
+{
+  if (is.na(actividad2$steps[i]))       
+    actividad2$steps[i]<-acumulado2[acumulado2$interval==actividad$interval[i],2]
+}
+```
+
+We filled the NA with the mean of the interval (from all the days)
+
+```{r}
+acumulado3<-aggregate(steps ~ date, actividad2, sum)
+hist(acumulado3$steps,main="Histogram of Steps",xlab="Steps per day")
+```
+
+### Mean of the filled data: 
+```{r}
+mean(acumulado3$steps)
+```
+
+### Median of the filled data:
+```{r}
+median(acumulado3$steps)
+```
+
+#### Do these values differ from the estimates from the first part of the assignment?
+
+We notice that the mean an median differ very little.
+
+#### What is the impact of imputing missing data on the estimates of the total daily number of steps?
+
+We notice that the histogram changes a bit because the sum has greater values.  But the average values don't change much.
 
 ## Are there differences in activity patterns between weekdays and weekends?
+
+```{r}
+
+```
+
